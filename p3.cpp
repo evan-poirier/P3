@@ -322,7 +322,26 @@ bool ContactList::addInfoOrdered(std::string first, std::string last, std::strin
 // 2. otherwise return true and remove the contact and its info
 // - do not forget to update count
 bool ContactList::removeContact(std::string first, std::string last) {
-    return true;
+    Contact *currContact = this->headContactList;
+    Contact *prevContact = nullptr;
+
+    while (currContact != nullptr) {
+        if (currContact->last == last && currContact->first == first) {
+            if (prevContact == nullptr) {
+                this->headContactList = currContact->next;
+            } else {
+                prevContact->next = currContact->next;
+            }
+
+            delete currContact;
+            this->count --;
+            return true;
+        }
+        prevContact = currContact;
+        currContact = currContact->next;
+    }
+
+    return false;
 }
 
 // remove the info from a contact's info list
@@ -330,7 +349,42 @@ bool ContactList::removeContact(std::string first, std::string last) {
 // 2. return false and do nothing if the info is not in the contact's info list
 // 3. otherwise return true and remove the info from the contact's list
 bool ContactList::removeInfo(std::string first, std::string last, std::string infoName) {
-    return true;
+    Contact *currContact = this->headContactList;
+    bool contactExists = false;
+
+     // go through list of contacts. if contact is found, stop on that node.
+    while (currContact != nullptr) {
+        if (currContact->first == first && currContact->last == last) {
+            contactExists = true;
+            break;
+        }
+        currContact = currContact->GetNext();
+    }
+
+    // if the specified contact wasnt found
+    if (!contactExists) {
+        return false;
+    }
+
+    Info *currInfo = currContact->headInfoList;
+    Info *prevInfo = nullptr;
+
+    while (currInfo != nullptr) {
+        if (currInfo->name == infoName) {
+            if (prevInfo == nullptr) {
+                currContact->headInfoList = currInfo->next;
+            } else {
+                prevInfo->next = currInfo->next;
+            }
+
+            delete currInfo;
+            return true;
+        }
+        prevInfo = currInfo;
+        currInfo = currInfo->next;
+    }
+
+    return false;
 }
 
 // destroy the list by removing all contacts and their infos

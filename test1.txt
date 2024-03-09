@@ -10,4 +10,7 @@ addInfoOrdered Natasha Romanoff birthday December-3-1984
 addInfoOrdered Natasha Romanoff email black.widow@avengers.com
 addInfoOrdered Natasha Romanoff alias BlackWidow
 print
+removeContact Peter Parker
+removeInfo Natasha Romanoff alias
+print
 quit
