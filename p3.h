@@ -29,6 +29,7 @@ public:
     Contact* GetNext(); //returns pointer to next node in LL
     void PrintNode();
     int Compare(Contact *comparison); //compares 2 contact objects alphabetically
+    ~Contact();
 };
 
 class ContactList {

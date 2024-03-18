@@ -68,6 +68,18 @@ int Contact::Compare(Contact *comparison) {
     }
 }
 
+// Contact destructor
+Contact::~Contact() {
+    Info *currInfo = this->headInfoList;
+    Info *nextInfo;
+
+    while (currInfo != nullptr) {
+        nextInfo = currInfo->GetNext();
+        delete currInfo;
+        currInfo = nextInfo;
+    }
+}
+
 ContactList::ContactList() {
     this->headContactList = nullptr;
     this->tailContactList = nullptr;
@@ -317,6 +329,8 @@ bool ContactList::addInfoOrdered(std::string first, std::string last, std::strin
     return true;
 }
 
+
+// NOT FINISHED, have to create and implement Contact deconstructor
 // remove the contact and its info from the list
 // 1. return false and do nothing if the contact is not in the list
 // 2. otherwise return true and remove the contact and its info
@@ -389,7 +403,14 @@ bool ContactList::removeInfo(std::string first, std::string last, std::string in
 
 // destroy the list by removing all contacts and their infos
 ContactList::~ContactList() {
+    Contact *currContact = this->headContactList;
+    Contact *nextContact;
 
+    while (currContact != nullptr) {
+        nextContact = currContact->GetNext();
+        delete currContact;
+        currContact = nextContact;
+    }
 }
 
 // deep copy the source list
