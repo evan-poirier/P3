@@ -416,14 +416,105 @@ ContactList::~ContactList() {
 // deep copy the source list
 // - do not forget to update count
 ContactList::ContactList(const ContactList &src) {
+    // update count
+    count = src.count;
 
+    // if source list is empty, set head to empty and return
+    if (src.headContactList == nullptr) {
+        headContactList = nullptr;
+        return;
+    }
+
+    // create current source node
+    Contact *srcCurr = src.headContactList;
+    
+    // create current new node and make it the head
+    Contact *newCurr = new Contact(srcCurr->first, srcCurr->last, nullptr);
+    headContactList = newCurr;
+
+    // update current source node
+    srcCurr = srcCurr->next;
+
+    while (srcCurr != nullptr) {
+        newCurr->next = new Contact(srcCurr->first, srcCurr->last, nullptr);
+        newCurr = newCurr->next;
+        srcCurr = srcCurr->next;
+    }
+
+    tailContactList = newCurr;
+
+    
+    // set current node back to beginning in order to go through and add info
+    srcCurr = src.headContactList;
+
+    // add info
+    while (srcCurr != nullptr) {
+        Info *currInfo = srcCurr->headInfoList;
+
+        while (currInfo != nullptr) {
+            addInfo(srcCurr->first, srcCurr->last, currInfo->name, currInfo->value);
+            currInfo = currInfo->next;
+        }
+        srcCurr = srcCurr->next;
+    }
 }
+    
 
 // remove all contacts and their info then deep copy the source list
 // - do not forget to update count
 const ContactList &ContactList::operator=(const ContactList &src) {
     if (this != &src) {
+        Contact *currDelete = headContactList;
 
+        // delete each contact in list
+        while (currDelete != nullptr) {
+            Contact *nextToDelete = currDelete->next;
+            delete currDelete;
+            currDelete = nextToDelete;
+        }
+
+        headContactList = nullptr;
+
+        // update count
+        count = src.count;
+
+        // if source list is empty, set head to empty and return
+        if (src.headContactList == nullptr) {
+            return *this;
+        }
+
+        // create current source node
+        Contact *srcCurr = src.headContactList;
+        
+        // create current new node and make it the head
+        Contact *newCurr = new Contact(srcCurr->first, srcCurr->last, nullptr);
+        headContactList = newCurr;
+
+        // update current source node
+        srcCurr = srcCurr->next;
+
+        while (srcCurr != nullptr) {
+            newCurr->next = new Contact(srcCurr->first, srcCurr->last, nullptr);
+            newCurr = newCurr->next;
+            srcCurr = srcCurr->next;
+        }
+
+        tailContactList = newCurr;
+
+        
+        // set current node back to beginning in order to go through and add info
+        srcCurr = src.headContactList;
+
+        // add info
+        while (srcCurr != nullptr) {
+            Info *currInfo = srcCurr->headInfoList;
+
+            while (currInfo != nullptr) {
+                addInfo(srcCurr->first, srcCurr->last, currInfo->name, currInfo->value);
+                currInfo = currInfo->next;
+            }
+            srcCurr = srcCurr->next;
+        }
     }
     return *this;
 }
